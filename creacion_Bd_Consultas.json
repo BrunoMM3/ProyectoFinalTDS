@@ -1,12 +1,14 @@
-//NW
 use inventario;
 
 // Insertar personal 
 db.personal.insertOne({"nombre": "Juan Pérez",
+    "usuario": "carlos.gomez",
+    "email": "carlos.gomez@empresa.com",
+    "contrasena": "$2b$10$uIOhnfsWjsEmLgMkZOJ4nOe4Eqs9FVjEkH.Cu1u5GdsSglZ8Ue5zO", // Hash con bcrypt
+    "rol": "Administrador",
     "departamento": "Recursos Humanos",
     "puesto": "Supervisor",
-    "telefono": "555-1234-567",
-    "email": "juan.perez@empresa.com"});
+    "telefono": "555-1234-567"});
 
 
 // Insertar Ubicaciones 
@@ -159,6 +161,9 @@ db.mantenimientos.updateOne(
 
 // Consulta para eliminar con id_objeto
 db.activos.deleteOne({ _id: ObjectId("682aba0af1556ce5a71f1b2f") });
+
+//Consulta para iniciar sesion 
+db.personal.find({"usuario":"carlos.gomez", "contrasena":"$2b$10$uIOhnfsWjsEmLgMkZOJ4nOe4Eqs9FVjEkH.Cu1u5GdsSglZ8Ue5zO"});
 
 
 
