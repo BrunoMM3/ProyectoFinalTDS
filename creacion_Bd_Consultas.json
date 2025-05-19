@@ -1,0 +1,169 @@
+use inventario;
+
+// Insertar personal 
+db.personal.insertOne({"nombre": "Juan Pérez",
+    "departamento": "Recursos Humanos",
+    "puesto": "Supervisor",
+    "telefono": "555-1234-567",
+    "email": "juan.perez@empresa.com"});
+
+
+// Insertar Ubicaciones 
+db.ubicaciones.insertOne({"nombre": "Sala de juntas 3",
+    "departamento": "Recursos Humanos",
+    "responsable": ObjectId("682ab726f1556ce5a71f1b2a"), // Referencia al ID de 'personal'
+    "extension": "302"});
+
+// Insertar estado
+db.estado.insertMany([
+    {"nombre": "Activo",  "descripcion": "El activo está funcionando correctamente y en uso."},
+    {"nombre": "En reparación", "descripcion": "El activo está en reparación."}, 
+    {"nombre": "Baja", "descripcion": "El activo está funcionando correctamente y en uso."}]);
+
+
+// Insertar activos
+db.activos.insertOne({"nombre": "Proyector Epson",
+    "descripcion": "Proyector Full HD con HDMI y USB",
+    "caracteristicas": {
+        "marca": "Epson",
+        "modelo": "X400",
+        "serie": "EPX123456",
+        "tipo": "Proyector"
+    },
+    "ubicacion": ObjectId("682ab856f1556ce5a71f1b2b"), 
+    "estado": ObjectId("682ab913f1556ce5a71f1b2c"), 
+    "fecha_adquisicion": ISODate("2023-02-15T00:00:00Z")});
+
+// Insertar asignaciones
+db.asignaciones.insert({"id_activo": ObjectId("682aba0af1556ce5a71f1b2f"), // Referencia al ID en 'activos'
+    "asignado_a": ObjectId("682ab726f1556ce5a71f1b2a"), // Referencia al ID en 'personal'
+    "fecha_asignacion": ISODate("2024-11-12T00:00:00Z"),
+    "fecha_devolucion": null, // Si es null, significa que sigue asignado
+    "observaciones": "Uso para proyecto interno"});
+
+// Insertar mantenimientos
+db.mantenimientos.insert({"id_activo": ObjectId("682aba0af1556ce5a71f1b2f"), // Referencia al ID en 'activos'
+    "fecha": ISODate("2024-09-14T00:00:00Z"),
+    "tipo_mantenimiento": "Preventivo", // Opciones: Preventivo, Correctivo
+    "descripcion": "Limpieza de componentes y revisión de puertos.",
+    "costo": 500,
+    "realizado_por": ObjectId("682ab726f1556ce5a71f1b2a"), // Referencia al ID en 'personal'
+    "observaciones": "Sin problemas detectados."});
+
+
+// Consulta para traer la información de los activos que están activos
+db.activos.aggregate([
+    {
+        $lookup: {
+            from: "estado",
+            localField: "estado",
+            foreignField: "_id",
+            as: "estado_info"
+        }
+    },
+    {
+        $match: {
+            "estado_info.nombre": "Activo"
+        }
+    }
+]);
+
+// Consulta para traer la información de todos los catalogos
+db.activos.find();
+
+// Consulta para traer la información de estado
+db.estado.find();
+
+// Consulta para traer la información de personal
+db.personal.find();
+
+// Consulta para traer la información de asignaciones
+db.asignaciones.find();
+
+// Consulta para traer la información de mantenimiento
+db.mantenimientos.find();
+
+// Consulta para traer la información de mantenimiento
+db.ubicaciones.find();
+
+// Consulta para modificar activo
+db.activos.updateOne(
+    { _id: ObjectId("682aba0af1556ce5a71f1b2f") }, // ID del activo a modificar
+    {
+        $set: {
+            "descripcion": "Proyector Full HD con HDMI, USB y VGA",
+            "ubicacion": ObjectId("682ab856f1556ce5a71f1b2b"), // Nueva ubicación
+            "estado": ObjectId("682ab913f1556ce5a71f1b2c")    // Nuevo estado
+        }
+    }
+);
+
+// Consulta para modificar personal
+db.personal.updateOne(
+    { _id: ObjectId("682ab726f1556ce5a71f1b2a") }, // ID del personal a modificar
+    {
+        $set: {
+            "telefono": "555-9876-543",
+            "email": "juan.perez@newmail.com"
+        }
+    }
+);
+
+// Consulta para modificar ubicacion
+db.ubicaciones.updateOne(
+    { _id: ObjectId("682ab856f1556ce5a71f1b2b") }, // ID de la ubicación a modificar
+    {
+        $set: {
+            "nombre": "Oficina Principal",
+            "departamento": "Dirección General",
+            "responsable": ObjectId("682ab726f1556ce5a71f1b2a") // Nuevo responsable
+        }
+    }
+);
+
+// Consulta para modificar estado
+db.estado.updateOne(
+    { _id: ObjectId("682ab913f1556ce5a71f1b2c") }, // ID del estado a modificar
+    {
+        $set: {
+            "nombre": "En mantenimiento",
+            "descripcion": "El activo se encuentra en proceso de mantenimiento."
+        }
+    }
+);
+
+// Consulta para modificar asignacion
+db.asignaciones.updateOne(
+    { _id: ObjectId("682aba1bf1556ce5a71f1b2d") }, // ID de la asignación a modificar
+    {
+        $set: {
+            "asignado_a": ObjectId("682ab726f1556ce5a71f1b2a"), // Nuevo personal asignado
+            "observaciones": "Asignación temporal para proyecto de actualización",
+            "fecha_devolucion": ISODate("2025-06-15T00:00:00Z") // Fecha de devolución
+        }
+    }
+);
+
+// Consulta para modificar mantenimiento
+db.mantenimientos.updateOne(
+    { _id: ObjectId("682aba2cf1556ce5a71f1b2e") }, // ID del mantenimiento a modificar
+    {
+        $set: {
+            "descripcion": "Revisión de puertos y limpieza profunda.",
+            "costo": 750,
+            "observaciones": "Se detectaron algunos problemas menores."
+        }
+    }
+);
+
+// Consulta para eliminar con id_objeto
+db.activos.deleteOne({ _id: ObjectId("682aba0af1556ce5a71f1b2f") });
+
+
+
+
+
+
+
+
+
