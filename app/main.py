@@ -2,6 +2,10 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 import os
+import sys
+from pathlib import Path
+# Agrega el directorio padre al path de Python
+sys.path.append(str(Path(__file__).parent.parent))
 from gui.login_window import LoginView
 from gui.register_window import RegisterWindow
 
