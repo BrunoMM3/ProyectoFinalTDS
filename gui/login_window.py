@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from controllers.login_controller import LoginController
+from gui.dashboard import Dashboard
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -27,13 +28,16 @@ class LoginView(tk.Tk):
     def login(self):
         username = self.username_entry.get()
         password = self.password_entry.get()
-        user = self.controller.authenticate(username, password)
-
+        if not username or not password:
+            messagebox.showerror("Error", "Por favor, complete todos los campos.")
+            return
+        user = self.controller.login_user(username, password)
         if user:
-            messagebox.showinfo("Éxito", f"Bienvenido {user.fullname} ({user.role})")
-            self.destroy()
+            messagebox.showinfo("Éxito", f"Bienvenido, {user.fullname}")
+            self.destroy()  # Cierra ventana login
+            Dashboard(user)      # Lanza el dashboard
         else:
-            messagebox.showerror("Error", "Usuario o contraseña incorrectos")
+            messagebox.showerror("Error", "Credenciales incorrectas")
 
 
 if __name__ == "__main__":

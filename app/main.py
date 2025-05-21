@@ -15,11 +15,12 @@ class HomePage(tk.Tk):
         # Frame Izquierdo (Botones)
         left_frame = tk.Frame(self, width=400, bg="#f0f0f0")
         left_frame.pack(side="left", fill="both", expand=True)
+        
+        tk.Label(left_frame, text="Bienvenido", font=("Arial", 20), bg="#f0f0f0").pack(pady=40)
+
         s = ttk.Style()
         s.configure("Peligro.TButton", foreground="#ff0000")
         s.map("Peligro.TButton", foreground=[("active", "#FFA500")])
-        tk.Label(left_frame, text="Bienvenido", font=("Arial", 20), bg="#f0f0f0").pack(pady=40)
-
         login_btn = ttk.Button(left_frame, text="Login", command=self.go_to_login, style="Peligro.TButton")
         login_btn.pack(pady=10, ipadx=10, ipady=5)
 
