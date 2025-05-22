@@ -3,13 +3,14 @@ from tkinter import ttk, messagebox
 from repositories.activo_repository import obtener_activos, obtener_activo_por_id, eliminar_activo_por_id
 from gui.registro_activo import RegistroActivo
 from gui.actualizar_activo import ActualizarActivo
+from gui.maintenance_window import MaintenanceWindow
 
 class Dashboard:
     def __init__(self, user):
         self.user = user
         self.window = tk.Tk()
         self.window.title("Dashboard - Gestión de Activos")
-        self.window.geometry("1200x600")
+        self.window.geometry("1300x600")
 
         tk.Label(self.window, text=f"Bienvenido, {self.user.fullname}", font=("Arial", 16)).pack(pady=10)
         tk.Label(self.window, text=f"Rol: {self.user.role}", font=("Arial", 12)).pack(pady=5)
@@ -18,7 +19,7 @@ class Dashboard:
         button_frame.pack(pady=10)
 
         if self.user.role == "admin":
-            tk.Button(button_frame, text="Mantenimiento", width=20).grid(row=0, column=0, padx=5)
+            tk.Button(button_frame, text="Mantenimiento", width=20,command=self.open_maintenance).grid(row=0, column=0, padx=5)
             tk.Button(button_frame, text="Agregar Activo", width=20, command=self.abrir_registro_activo).grid(row=0, column=1, padx=5)
         tk.Button(button_frame, text="Cerrar sesión", width=20, command=self.logout).grid(row=0, column=2, padx=5)
 
@@ -48,7 +49,7 @@ class Dashboard:
 
         for col, heading in self.columnas.items():
             self.tree.heading(col, text=heading)
-            self.tree.column(col, width=100, anchor="center")
+            self.tree.column(col, width=80, anchor="center")
 
         self.tree.pack(padx=10, pady=10, fill="both", expand=True)
 
@@ -57,6 +58,9 @@ class Dashboard:
 
         self.cargar_activos()
         self.window.mainloop()
+    
+    def open_maintenance(self):
+        MaintenanceWindow(self.window,on_update=self.cargar_activos)
 
     def abrir_registro_activo(self):
         RegistroActivo(self.window, quien_registro=self.user.fullname, on_registro_exitoso=self.cargar_activos)
@@ -81,16 +85,16 @@ class Dashboard:
                 activo.get("quien_registro", "")
             ]
             if self.user.role == "admin":
-                values.append(str(activo["_id"]))
-            self.tree.insert("", "end", values=values)
+                values.append("Actualizar | Eliminar")  # Mostrar texto en la columna
+                self.tree.insert("", "end", iid=str(activo["_id"]), values=values)  # Usar el _id como iid
+            else:
+                self.tree.insert("", "end", values=values)
 
     def on_double_click(self, event):
         item = self.tree.identify_row(event.y)
         if item:
-            values = self.tree.item(item, "values")
-            if len(values) >= len(self.columnas):
-                activo_id = values[-1]
-                self.mostrar_acciones(activo_id)
+            activo_id = item  # El iid es el _id del activo
+            self.mostrar_acciones(activo_id)
 
     def mostrar_acciones(self, activo_id):
         activo = obtener_activo_por_id(activo_id)
