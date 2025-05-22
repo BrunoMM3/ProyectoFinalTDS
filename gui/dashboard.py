@@ -4,6 +4,8 @@ from repositories.activo_repository import obtener_activos, obtener_activo_por_i
 from gui.registro_activo import RegistroActivo
 from gui.actualizar_activo import ActualizarActivo
 from gui.maintenance_window import MaintenanceWindow
+from gui.asignar_ubicacion import AsignarUbicacion
+from gui.consultar_ubicaciones import ConsultarUbicaciones
 
 class Dashboard:
     def __init__(self, user):
@@ -19,10 +21,12 @@ class Dashboard:
         button_frame.pack(pady=10)
 
         if self.user.role == "admin":
-            tk.Button(button_frame, text="Mantenimiento", width=20,command=self.open_maintenance).grid(row=0, column=0, padx=5)
-            tk.Button(button_frame, text="Agregar Activo", width=20, command=self.abrir_registro_activo).grid(row=0, column=1, padx=5)
-        tk.Button(button_frame, text="Cerrar sesión", width=20, command=self.logout).grid(row=0, column=2, padx=5)
-        tk.Button(button_frame, text="Consultas", width=20, command=self.open_queries).grid(row=0, column=3, padx=5)
+            tk.Button(button_frame, text="⚙️Mantenimiento", width=20,command=self.open_maintenance).grid(row=0, column=0, padx=5)
+            tk.Button(button_frame, text="➕Agregar Activo", width=20, command=self.abrir_registro_activo).grid(row=0, column=1, padx=5)
+            tk.Button(button_frame, text="📌Asignar Ubicación", width=20, command=self.abrir_asignar_ubicacion).grid(row=0, column=2, padx=5)
+        tk.Button(button_frame, text="🔒 Cerrar sesión", width=20, command=self.logout).grid(row=0, column=5, padx=5)
+        tk.Button(button_frame, text="🔍 Consultas", width=20, command=self.open_queries).grid(row=0, column=3, padx=5)
+        tk.Button(button_frame, text="🔍 Consultar ubicaciones", width=20, command=self.consult_locations).grid(row=0, column=4, padx=5)
 
         self.columnas = {
             "nombre": "Nombre",
@@ -59,6 +63,14 @@ class Dashboard:
 
         self.cargar_activos()
         self.window.mainloop()
+
+    def consult_locations(self):
+        ConsultarUbicaciones(self.window)
+
+    def abrir_asignar_ubicacion(self):
+        AsignarUbicacion(self.window)
+
+    
     def open_queries(self):
         from gui.advanced_queries import AdvancedQueryWindow
         AdvancedQueryWindow(self.window)
@@ -89,7 +101,7 @@ class Dashboard:
                 activo.get("quien_registro", "")
             ]
             if self.user.role == "admin":
-                values.append("Actualizar | Eliminar")  # Mostrar texto en la columna
+                values.append("📝 | 🗑️")  # Mostrar texto en la columna
                 self.tree.insert("", "end", iid=str(activo["_id"]), values=values)  # Usar el _id como iid
             else:
                 self.tree.insert("", "end", values=values)

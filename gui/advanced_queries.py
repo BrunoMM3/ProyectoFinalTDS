@@ -30,7 +30,7 @@ class AdvancedQueryWindow(tk.Toplevel):
         tk.Button(filter_frame, text="Buscar", command=self.perform_query).grid(row=0, column=6, padx=10)
 
         # Tabla de resultados
-        self.tree = ttk.Treeview(self, columns=("name", "location", "status", "assigned_to"), show="headings")
+        self.tree = ttk.Treeview(self, columns=("nombre", "ubicacion", "estado", "encargado"), show="headings")
         for col in self.tree["columns"]:
             self.tree.heading(col, text=col.capitalize())
             self.tree.column(col, width=200)
@@ -52,9 +52,9 @@ class AdvancedQueryWindow(tk.Toplevel):
         if status:
             filters["estado"] = status
         if location:
-            filters["location"] = location
+            filters["ubicacion"] = location
         if assigned_to:
-            filters["assigned_to"] = assigned_to
+            filters["encargado"] = assigned_to
 
         self.results = self.asset_controller.advanced_query(filters)
 
@@ -62,11 +62,12 @@ class AdvancedQueryWindow(tk.Toplevel):
             self.tree.delete(i)
 
         for asset in self.results:
+            ubicacion, encargado = self.asset_controller.get_location_info(asset["_id"])
             self.tree.insert("", "end", values=(
                 asset.get("nombre", "Sin nombre"),
-                asset.get("location", "N/A"),
+                ubicacion,
                 asset.get("estado", "Desconocido"),
-                asset.get("assigned_to", "Nadie")
+                encargado
             ))
 
     def export_csv(self):

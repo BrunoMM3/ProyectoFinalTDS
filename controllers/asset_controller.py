@@ -33,3 +33,12 @@ class AssetController:
 
     def advanced_query(self, filters: dict):
         return self.model.query_assets(filters)
+    
+    # En controllers/asset_controller.py
+    def get_location_info(self, activo_id):
+        from repositories.mongo_cliente import get_db_connection
+        self.db = get_db_connection() 
+        location = self.db["locations"].find_one({"activo_id": activo_id})
+        if location:
+            return location.get("ubicacion", "N/A"), location.get("encargado", "Nadie")
+        return "N/A", "Nadie"
