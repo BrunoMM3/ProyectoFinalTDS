@@ -8,12 +8,12 @@ class RegisterController:
         self.db = get_db_connection()
         self.users_collection = self.db["users"]
 
-    def register_user(self, username, password, fullname, email):
+    def register_user(self, username, password, fullname, email,role):
         if self.users_collection.find_one({"username": username}):
             return False, "El nombre de usuario ya está en uso."
 
         hashed_password = hash_password(password)  # Aquí encriptamos la contraseña
-        new_user = User(username, hashed_password, fullname, email, role="usuario")
+        new_user = User(username, hashed_password, fullname, email, role)
         
         try:
             self.users_collection.insert_one(new_user.to_dict())

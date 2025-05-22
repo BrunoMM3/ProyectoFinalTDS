@@ -6,7 +6,7 @@ class RegisterWindow:
     def __init__(self, root):
         self.root = root
         self.root.title("Registro de Usuario")
-        self.root.geometry("400x350")
+        self.root.geometry("400x400")
         self.controller = RegisterController()
 
         tk.Label(root, text="Registro de Usuario", font=("Arial", 16)).pack(pady=10)
@@ -19,6 +19,11 @@ class RegisterWindow:
             entry.pack()
             self.entries[field.lower()] = entry
 
+        # Campo para código de administrador
+        tk.Label(root, text="Código de Administrador (opcional)").pack()
+        self.admin_code_entry = tk.Entry(root)
+        self.admin_code_entry.pack()
+
         tk.Button(root, text="Registrarse", command=self.register).pack(pady=20)
 
     def register(self):
@@ -26,8 +31,12 @@ class RegisterWindow:
         password = self.entries["password"].get()
         fullname = self.entries["fullname"].get()
         email = self.entries["email"].get()
+        admin_code = self.admin_code_entry.get()
 
-        success, msg = self.controller.register_user(username, password, fullname, email)
+        # Cambia "1234" por el código que desees
+        role = "admin" if admin_code == "1234" else "user"
+
+        success, msg = self.controller.register_user(username, password, fullname, email, role)
         if success:
             messagebox.showinfo("Éxito", msg)
             self.root.destroy()
