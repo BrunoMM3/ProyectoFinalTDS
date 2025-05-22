@@ -22,6 +22,7 @@ class Dashboard:
             tk.Button(button_frame, text="Mantenimiento", width=20,command=self.open_maintenance).grid(row=0, column=0, padx=5)
             tk.Button(button_frame, text="Agregar Activo", width=20, command=self.abrir_registro_activo).grid(row=0, column=1, padx=5)
         tk.Button(button_frame, text="Cerrar sesión", width=20, command=self.logout).grid(row=0, column=2, padx=5)
+        tk.Button(button_frame, text="Consultas", width=20, command=self.open_queries).grid(row=0, column=3, padx=5)
 
         self.columnas = {
             "nombre": "Nombre",
@@ -58,6 +59,9 @@ class Dashboard:
 
         self.cargar_activos()
         self.window.mainloop()
+    def open_queries(self):
+        from gui.advanced_queries import AdvancedQueryWindow
+        AdvancedQueryWindow(self.window)
     
     def open_maintenance(self):
         MaintenanceWindow(self.window,on_update=self.cargar_activos)
