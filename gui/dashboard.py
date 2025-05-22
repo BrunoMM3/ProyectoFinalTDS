@@ -81,16 +81,16 @@ class Dashboard:
                 activo.get("quien_registro", "")
             ]
             if self.user.role == "admin":
-                values.append(str(activo["_id"]))
-            self.tree.insert("", "end", values=values)
+                values.append("Actualizar | Eliminar")  # Mostrar texto en la columna
+                self.tree.insert("", "end", iid=str(activo["_id"]), values=values)  # Usar el _id como iid
+            else:
+                self.tree.insert("", "end", values=values)
 
     def on_double_click(self, event):
         item = self.tree.identify_row(event.y)
         if item:
-            values = self.tree.item(item, "values")
-            if len(values) >= len(self.columnas):
-                activo_id = values[-1]
-                self.mostrar_acciones(activo_id)
+            activo_id = item  # El iid es el _id del activo
+            self.mostrar_acciones(activo_id)
 
     def mostrar_acciones(self, activo_id):
         activo = obtener_activo_por_id(activo_id)
