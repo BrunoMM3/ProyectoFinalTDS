@@ -41,4 +41,4 @@ class AssetController:
         location = self.db["locations"].find_one({"activo_id": activo_id})
         if location:
             return location.get("ubicacion", "N/A"), location.get("encargado", "Nadie")
-        return "N/A", "Nadie"
+        return "N/A", "Nadie" 
