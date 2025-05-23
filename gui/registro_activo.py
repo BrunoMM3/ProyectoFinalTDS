@@ -56,8 +56,8 @@ class RegistroActivo(tk.Toplevel):
                 return
 
             # Validar valor numérico positivo
-            datos["valor"] = float(datos["valor"])
-            if datos["valor"] <= 0:
+            datos["Precio"] = float(datos["Precio"])
+            if datos["Precio"] <= 0:
                 messagebox.showerror("Valor inválido", "El valor debe ser mayor a 0.")
                 return
 

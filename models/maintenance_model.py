@@ -30,3 +30,20 @@ class MaintenanceModel:
             {"_id": ObjectId(asset_id)},
             {"$set": {"estado": status}}
         )
+        
+        
+    # En maintenance_model.py
+    @staticmethod
+    def delete_maintenance(maintenance_id):
+        maintenances_collection.delete_one({"_id": ObjectId(maintenance_id)})
+
+    @staticmethod
+    def update_maintenance(maintenance_id, description, performed_by, maintenance_type):
+        maintenances_collection.update_one(
+            {"_id": ObjectId(maintenance_id)},
+            {"$set": {
+                "description": description,
+                "performed_by": performed_by,
+                "maintenance_type": maintenance_type
+            }}
+        )
