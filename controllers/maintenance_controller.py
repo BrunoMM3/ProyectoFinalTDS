@@ -20,3 +20,18 @@ class MaintenanceController:
 
     def get_maintenance_history(self, asset_id):
         return self.model.get_maintenances_for_asset(asset_id)
+    
+    # En maintenance_controller.py
+    def delete_maintenance(self, maintenance_id):
+        try:
+            self.model.delete_maintenance(maintenance_id)
+            return True, "Mantenimiento eliminado."
+        except Exception as e:
+            return False, str(e)
+
+    def update_maintenance(self, maintenance_id, description, performed_by, maintenance_type):
+        try:
+            self.model.update_maintenance(maintenance_id, description, performed_by, maintenance_type)
+            return True, "Mantenimiento actualizado."
+        except Exception as e:
+            return False, str(e)
