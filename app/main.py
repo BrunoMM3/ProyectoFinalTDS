@@ -20,7 +20,8 @@ class HomePage(tk.Tk):
         left_frame = tk.Frame(self, width=400, bg="#f0f0f0")
         left_frame.pack(side="left", fill="both", expand=True)
         
-        tk.Label(left_frame, text="Bienvenido", font=("Arial", 20), bg="#f0f0f0").pack(pady=40)
+        tk.Label(left_frame, text="Bienvenido a AssetFlow", font=("Arial", 20), bg="#f0f0f0").pack(pady=40)
+        tk.Label(left_frame, text="Activos seguros. Información clara. Gestión inteligente.", font=("Arial", 12), bg="#f0f0f0").pack(pady=40)
 
         s = ttk.Style()
         s.configure("Peligro.TButton", foreground="#ff0000")
@@ -49,15 +50,16 @@ class HomePage(tk.Tk):
             error_label.pack(pady=180)
 
     def go_to_login(self):
-        print("Ir al login")  # Aquí puedes abrir la ventana de login
-        self.destroy()  # Cierra la ventana actual
-        login_app = LoginView()
-        login_app.mainloop()
+        print("Ir al login")
+        login_window = tk.Toplevel(self)
+        LoginView(login_window,main_window=self)
+        login_window.grab_set() 
 
     def go_to_signup(self):
         print("Ir al registro")
         reg_window = tk.Toplevel()
         RegisterWindow(reg_window)
+        reg_window.grab_set()
 
 if __name__ == "__main__":
     app = HomePage()
